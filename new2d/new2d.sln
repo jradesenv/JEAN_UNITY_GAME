@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2015
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "new2d.Plugins", "new2d.Plugins.csproj", "{7C52BF5A-78FF-56FA-5C17-12D1FE734954}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "new2d", "new2d.csproj", "{F5DC48D3-DE06-51A9-D942-F79E033D1322}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7C52BF5A-78FF-56FA-5C17-12D1FE734954}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C52BF5A-78FF-56FA-5C17-12D1FE734954}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C52BF5A-78FF-56FA-5C17-12D1FE734954}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C52BF5A-78FF-56FA-5C17-12D1FE734954}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5DC48D3-DE06-51A9-D942-F79E033D1322}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5DC48D3-DE06-51A9-D942-F79E033D1322}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5DC48D3-DE06-51A9-D942-F79E033D1322}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5DC48D3-DE06-51A9-D942-F79E033D1322}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
