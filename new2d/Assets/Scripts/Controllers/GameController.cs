@@ -39,14 +39,15 @@ public class GameController : MonoBehaviour
         }
     }
 
-    private void onUserConnectedHandler(string id, string name, float posX, float posY)
+    private void onUserConnectedHandler(string id, string name, float posX, float posY, Enums.CharacterClass characterClass)
     {
         PlayerStatsDTO stats = new PlayerStatsDTO()
         {
             id = id,
             playerName = name,
             x = posX,
-            y = posY
+            y = posY,
+            characterClass = characterClass
         };
         SpawnPlayer(otherPlayerObject, stats);
     }
@@ -62,5 +63,6 @@ public class GameController : MonoBehaviour
         playerStats.playerName = stats.playerName;
         playerStats.x = stats.x;
         playerStats.y = stats.y;
+        playerStats.characterClass = stats.characterClass;
     }
 }

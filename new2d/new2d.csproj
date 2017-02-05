@@ -13,11 +13,13 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile></CompilerResponseFile>
+    <CompilerResponseFile>
+    </CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>Android:13</UnityBuildTarget>
     <UnityVersion>5.5.0f3</UnityVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <LangVersion Condition=" '$(VisualStudioVersion)' != '10.0' ">4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -91,7 +93,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\Constants\SceneNames.cs" />
+    <Compile Include="Assets\Scripts\Constants\SpriteNames.cs" />
     <Compile Include="Assets\Scripts\Controllers\GameController.cs" />
+    <Compile Include="Assets\Scripts\Controllers\CreateAccountController.cs" />
     <Compile Include="Assets\Scripts\Controllers\LoginController.cs" />
     <Compile Include="Assets\Scripts\Controllers\MovementController.cs" />
     <Compile Include="Assets\Scripts\Controllers\NetworkController.cs" />
@@ -100,6 +104,9 @@
     <Compile Include="Assets\Scripts\Entity\BaseEntity.cs" />
     <Compile Include="Assets\Scripts\Entity\PlayerStats.cs" />
     <Compile Include="Assets\Scripts\Entity\PlayerStatsDTO.cs" />
+    <Compile Include="Assets\Scripts\Enums\CharacterClass.cs" />
+    <Compile Include="Assets\Scripts\Enums\FromServerMessageType.cs" />
+    <Compile Include="Assets\Scripts\Enums\ToServerMessageType.cs" />
     <Compile Include="Assets\Scripts\Utils\Converters.cs" />
     <Compile Include="Assets\Scripts\Utils\TabBehaviour.cs" />
   </ItemGroup>

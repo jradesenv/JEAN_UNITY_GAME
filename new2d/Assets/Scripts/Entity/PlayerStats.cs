@@ -7,4 +7,5 @@ public class PlayerStats : BaseEntity
 {
     public string playerName;
     public DateTime lastLogin;
+    public Enums.CharacterClass characterClass;
 }

@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using LiteNetLib;
 using LiteNetLib.Utils;
-using System.Linq;
 using System;
 using System.Collections.Generic;
 
@@ -58,10 +57,51 @@ public class NetworkController : MonoBehaviour, INetEventListener
 
     #endregion
 
+    #region Create Account
+
+    public delegate void OnCreateAccountFailEvent(string message);
+    private static OnCreateAccountFailEvent _onCreateAccountFailHandler = null;
+
+    public static void ListenCreateAccountEvent(OnCreateAccountFailEvent onCreateAccountFailHandler)
+    {
+        NetworkController._onCreateAccountFailHandler = onCreateAccountFailHandler;
+    }
+
+    public static void UnlistenCreateAccountEvent()
+    {
+        NetworkController._onCreateAccountFailHandler = null;
+    }
+
+    private static void OnCreateAccountFail(string[] arrValues)
+    {
+        string message = arrValues[0];
+
+        Debug.Log("Recebeu mensagem de falha de criação de conta: " + message);
+
+        if (NetworkController._onCreateAccountFailHandler != null)
+        {
+            NetworkController._onCreateAccountFailHandler(message);
+        }
+        else
+        {
+            Debug.Log("Handler de falha de criação de conta não registrado!");
+        }
+    }
+
+    public static void SendCreateAccountMessage(string username, string password, string playerName, Enums.CharacterClass characterClass)
+    {
+        string message = FormatMessageContent(Enums.ToServerMessageType.CREATE_ACCOUNT, username, password, playerName, Converters.CharacterClassToString(characterClass));
+        NetworkController.SendMessage(message);
+
+        Debug.Log("Enviou mensagem de criação de conta: " + username + " | " + password + " | " + playerName);
+    }
+
+    #endregion
+
     #region Login
 
     public delegate void OnLoginFailEvent(string message);
-    public delegate void OnLoginSuccessEvent(string id, string name, float posX, float posY, DateTime lastLogin);
+    public delegate void OnLoginSuccessEvent(string id, string name, float posX, float posY, Enums.CharacterClass characterClass, DateTime lastLogin);
 
     private class OnLoginHandler
     {
@@ -108,13 +148,14 @@ public class NetworkController : MonoBehaviour, INetEventListener
         string name = arrValues[1];
         float posX = Converters.StringToFloat(arrValues[2]);
         float posY = Converters.StringToFloat(arrValues[3]);
-        DateTime lastLogin = Converters.StringToDateTime(arrValues[4]);
+        Enums.CharacterClass characterClass = Converters.StringToCharacterClass(arrValues[4]);
+        DateTime lastLogin = Converters.StringToDateTime(arrValues[5]);
 
         Debug.Log("Recebeu mensagem de sucesso de login de: " + id + " - " + name);
 
         if (NetworkController._onLoginHandlers != null)
         {
-            NetworkController._onLoginHandlers.success(id, name, posX, posY, lastLogin);
+            NetworkController._onLoginHandlers.success(id, name, posX, posY, characterClass, lastLogin);
         }
         else
         {
@@ -124,7 +165,7 @@ public class NetworkController : MonoBehaviour, INetEventListener
 
     public static void SendLoginMessage(string username, string password)
     {
-        string message = FormatMessageContent(ToServerMessageType.LOGIN, username, password);
+        string message = FormatMessageContent(Enums.ToServerMessageType.LOGIN, username, password);
         NetworkController.SendMessage(message);
 
         Debug.Log("Enviou mensagem de login: " + username + " | " + password);
@@ -134,7 +175,7 @@ public class NetworkController : MonoBehaviour, INetEventListener
 
     #region User Connected
 
-    public delegate void OnUserConnectedEvent(string id, string name, float posX, float posY);
+    public delegate void OnUserConnectedEvent(string id, string name, float posX, float posY, Enums.CharacterClass characterClass);
     private static OnUserConnectedEvent _onUserConnectedHandler = null;
     public static void ListenUserConnectedEvent(OnUserConnectedEvent onUserConnectedHandler)
     {
@@ -152,12 +193,13 @@ public class NetworkController : MonoBehaviour, INetEventListener
         string name = arrValues[1];
         float posX = Converters.StringToFloat(arrValues[2]);
         float posY = Converters.StringToFloat(arrValues[3]);
+        Enums.CharacterClass characterClass = Converters.StringToCharacterClass(arrValues[4]);
 
         Debug.Log("Recebeu mensagem de usuario conectado de: " + id + " - " + name);
 
         if (NetworkController._onUserConnectedHandler != null)
         {
-            NetworkController._onUserConnectedHandler(id, name, posX, posY);
+            NetworkController._onUserConnectedHandler(id, name, posX, posY, characterClass);
         }
         else
         {
@@ -246,7 +288,7 @@ public class NetworkController : MonoBehaviour, INetEventListener
         string sMoveX = Converters.IntToString(moveX);
         string sMoveY = Converters.IntToString(moveY);
 
-        string message = FormatMessageContent(ToServerMessageType.MOVE, id, sMoveX, sMoveY);
+        string message = FormatMessageContent(Enums.ToServerMessageType.MOVE, id, sMoveX, sMoveY);
         NetworkController.SendMessage(message);
 
         Debug.Log("Enviou mensagem de movimento: " + id + " | " + sMoveX + "|" + sMoveY);
@@ -260,7 +302,7 @@ public class NetworkController : MonoBehaviour, INetEventListener
         string sActualX = Converters.FloatToString(actualX);
         string sActualY = Converters.FloatToString(actualY);
 
-        string message = FormatMessageContent(ToServerMessageType.END_MOVE, id, sActualX, sActualY);
+        string message = FormatMessageContent(Enums.ToServerMessageType.END_MOVE, id, sActualX, sActualY);
         NetworkController.SendMessage(message);
 
         Debug.Log("Enviou mensagem de fim de movimento: " + id + " | " + sActualX + "|" + sActualY);
@@ -275,7 +317,7 @@ public class NetworkController : MonoBehaviour, INetEventListener
 
     public static void SendGetOtherPlayersMessage(string id)
     {
-        string message = FormatMessageContent(ToServerMessageType.GET_OTHER_PLAYERS, id);
+        string message = FormatMessageContent(Enums.ToServerMessageType.GET_OTHER_PLAYERS, id);
         SendMessage(message);
     }
 
@@ -319,25 +361,29 @@ public class NetworkController : MonoBehaviour, INetEventListener
         string messageType = arrMessageParts[0];
         string[] arrValues = arrMessageParts[1].Split(_messageValuesSeparator);
 
-        if (messageType == FromServerMessageType.MOVE.ToString("D"))
+        if (messageType == Enums.FromServerMessageType.MOVE.ToString("D"))
         {
             NetworkController.OnMovementReceive(arrValues);
         }
-        else if (messageType == FromServerMessageType.END_MOVE.ToString("D"))
+        else if (messageType == Enums.FromServerMessageType.END_MOVE.ToString("D"))
         {
             NetworkController.OnEndMovementReceive(arrValues);
         }
-        else if (messageType == FromServerMessageType.USER_CONNECTED.ToString("D"))
+        else if (messageType == Enums.FromServerMessageType.USER_CONNECTED.ToString("D"))
         {
             NetworkController.OnUserConnected(arrValues);
         }
-        else if (messageType == FromServerMessageType.LOGIN_SUCCESS.ToString("D"))
+        else if (messageType == Enums.FromServerMessageType.LOGIN_SUCCESS.ToString("D"))
         {
             NetworkController.OnLoginSuccess(arrValues);
         }
-        else if (messageType == FromServerMessageType.LOGIN_FAIL.ToString("D"))
+        else if (messageType == Enums.FromServerMessageType.LOGIN_FAIL.ToString("D"))
         {
             NetworkController.OnLoginFail(arrValues);
+        }
+        else if (messageType == Enums.FromServerMessageType.CREATE_ACCOUNT_FAIL.ToString("D"))
+        {
+            NetworkController.OnCreateAccountFail(arrValues);
         }
         else
         {
@@ -395,7 +441,7 @@ public class NetworkController : MonoBehaviour, INetEventListener
         NetworkController._serverPeer.Send(writer, SendOptions.ReliableOrdered);
     }
 
-    public static string FormatMessageContent(ToServerMessageType type, params string[] args)
+    public static string FormatMessageContent(Enums.ToServerMessageType type, params string[] args)
     {
         string message = type.ToString("D") + NetworkController._messageTypeSeparator;
         int argsLength = args.Length;
@@ -410,22 +456,5 @@ public class NetworkController : MonoBehaviour, INetEventListener
         }
 
         return message;
-    }
-
-    public enum FromServerMessageType
-    {
-        LOGIN_SUCCESS = 0,
-        LOGIN_FAIL = 1,
-        USER_CONNECTED = 2,
-        MOVE = 3,
-        END_MOVE = 4,
-    }
-
-    public enum ToServerMessageType
-    {
-        LOGIN = 0,
-        MOVE = 1,
-        END_MOVE = 2,
-        GET_OTHER_PLAYERS = 3
     }
 }

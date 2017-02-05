@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D _body;
 
     public PlayerStats stats;
+    public SpriteController spriteController;
 
     private static bool _alreadyExists = false;
 
@@ -27,6 +28,7 @@ public class PlayerController : MonoBehaviour
 
             _body = GetComponent<Rigidbody2D>();
             stats = GetComponent<PlayerStats>();
+            spriteController = GetComponent<SpriteController>();
         }
     }
 

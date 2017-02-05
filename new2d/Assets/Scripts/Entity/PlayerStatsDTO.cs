@@ -10,4 +10,5 @@ public class PlayerStatsDTO
     public float y;
     public string playerName;
     public DateTime lastLogin;
+    public Enums.CharacterClass characterClass;
 }

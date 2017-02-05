@@ -13,6 +13,7 @@ public class LoginController : MonoBehaviour
     public Text lblMessage;
     public Button btnLogin;
     public Button btnTryAgain;
+    public Button btnCreateAccount;
 
     public void OnConnectedToServerHandler()
     {
@@ -31,6 +32,7 @@ public class LoginController : MonoBehaviour
     void Start()
     {
         btnLogin.onClick.AddListener(OnLoginClick);
+        btnCreateAccount.onClick.AddListener(OnCreateAccountClick);
         btnTryAgain.onClick.AddListener(Connect);
         btnTryAgain.gameObject.SetActive(false);
 
@@ -60,6 +62,14 @@ public class LoginController : MonoBehaviour
         NetworkController.UnlistenToConnectToServer(OnConnectedToServerHandler);
         NetworkController.UnlistenToConnectionToServerFail(OnConnectionToServerFailHandler);
         btnLogin.onClick.RemoveAllListeners();
+        btnCreateAccount.onClick.RemoveAllListeners();
+    }
+
+    private void OnCreateAccountClick()
+    {
+        SceneManager.LoadScene(SceneNames.createAccount);
+
+        Destroy(this.gameObject);
     }
 
     private void OnLoginClick()
@@ -79,13 +89,14 @@ public class LoginController : MonoBehaviour
         }
     }
 
-    public void OnLoginSuccessHandler(string id, string name, float posX, float posY, DateTime lastLogin)
+    public void OnLoginSuccessHandler(string id, string name, float posX, float posY, Enums.CharacterClass characterClass, DateTime lastLogin)
     {
         GameController.playerStats.id = id;
         GameController.playerStats.playerName = name;
         GameController.playerStats.x = posX;
         GameController.playerStats.y = posY;
         GameController.playerStats.lastLogin = lastLogin;
+        GameController.playerStats.characterClass = characterClass;
 
         SceneManager.LoadScene(SceneNames.main);
 
@@ -103,6 +114,7 @@ public class LoginController : MonoBehaviour
         txtUsername.gameObject.SetActive(isActive);
         txtPassword.gameObject.SetActive(isActive);
         btnLogin.gameObject.SetActive(isActive);
+        btnCreateAccount.gameObject.SetActive(isActive);
     }
 
     #region Message

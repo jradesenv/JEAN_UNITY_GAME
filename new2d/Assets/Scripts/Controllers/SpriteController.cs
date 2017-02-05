@@ -5,24 +5,36 @@ using UnityEngine;
 
 public class SpriteController : MonoBehaviour {
 
+    public static Sprite[] sprites;
+
+    public PlayerStats stats;
     public string spriteSheetName;
 	
     // Use this for initialization
 	void Start () {
-        spriteSheetName = "warrior";
+        if (SpriteController.sprites == null)
+        {
+            SpriteController.sprites = Resources.LoadAll<Sprite>("");
+        }
+
+        stats = GetComponent<PlayerStats>();
     }
 
-    // Update is called once per frame
     void LateUpdate() {
-        var subSprites = Resources.LoadAll<Sprite>("Characters");
-        string[] currentSpriteNameParts = GetComponent<SpriteRenderer>().sprite.name.Split('_');
-        string newSpriteName = spriteSheetName + "_" + currentSpriteNameParts[1] + "_" + currentSpriteNameParts[2];
+        spriteSheetName = Converters.CharacterClassToSpriteSheetName(stats.characterClass);
 
-        var newSprite = Array.Find(subSprites, item => item.name == newSpriteName);
-        
-        if(newSprite)
+        SpriteRenderer renderer = GetComponent<SpriteRenderer>();
+        if (renderer.sprite != null)
         {
-            GetComponent<SpriteRenderer>().sprite = newSprite;
-        }  
+            string[] currentSpriteNameParts = renderer.sprite.name.Split('_');
+            string newSpriteName = spriteSheetName + "_" + currentSpriteNameParts[1] + "_" + currentSpriteNameParts[2];
+
+            var newSprite = Array.Find(SpriteController.sprites, item => item.name == newSpriteName);
+
+            if (newSprite)
+            {
+                renderer.sprite = newSprite;
+            }
+        }
     }
 }

@@ -13,9 +13,12 @@ class Converters
         if (value == 0)
         {
             result = 0;
-        } else if (value > 0) {
+        }
+        else if (value > 0)
+        {
             result = 1;
-        } else
+        }
+        else
         {
             result = -1;
         }
@@ -51,5 +54,38 @@ class Converters
     public static string DateTimeToString(DateTime dateTime)
     {
         return dateTime.ToString("O");
+    }
+
+    public static string CharacterClassToString(Enums.CharacterClass characterClass)
+    {
+        return characterClass.ToString("d");
+    }
+
+    public static Enums.CharacterClass StringToCharacterClass(string characterClassValue)
+    {
+        return (Enums.CharacterClass)Enum.Parse(typeof(Enums.CharacterClass), characterClassValue);
+    }
+
+    public static string CharacterClassToSpriteSheetName(Enums.CharacterClass characterClass)
+    {
+        string spriteSheetName = "";
+
+        switch (characterClass)
+        {
+            case Enums.CharacterClass.WARRIOR:
+                spriteSheetName = SpriteNames.warrior;
+                break;
+            case Enums.CharacterClass.RANGER:
+                spriteSheetName = SpriteNames.ranger;
+                break;
+            case Enums.CharacterClass.MAGE:
+                spriteSheetName = SpriteNames.mage;
+                break;
+            default:
+                spriteSheetName = "unknown";
+                break;
+        }
+
+        return spriteSheetName;
     }
 }
