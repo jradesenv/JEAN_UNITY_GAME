@@ -92,11 +92,17 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\Controllers\PlayerController.cs" />
-    <Compile Include="Assets\Scripts\Entity\BaseEntity.cs" />
+    <Compile Include="Assets\Scripts\Constants\SceneNames.cs" />
+    <Compile Include="Assets\Scripts\Controllers\GameController.cs" />
+    <Compile Include="Assets\Scripts\Controllers\LoginController.cs" />
     <Compile Include="Assets\Scripts\Controllers\MovementController.cs" />
     <Compile Include="Assets\Scripts\Controllers\NetworkController.cs" />
+    <Compile Include="Assets\Scripts\Controllers\PlayerController.cs" />
+    <Compile Include="Assets\Scripts\Entity\BaseEntity.cs" />
+    <Compile Include="Assets\Scripts\Entity\PlayerStats.cs" />
+    <Compile Include="Assets\Scripts\Entity\PlayerStatsDTO.cs" />
     <Compile Include="Assets\Scripts\Utils\Converters.cs" />
+    <Compile Include="Assets\Scripts\Utils\TabBehaviour.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

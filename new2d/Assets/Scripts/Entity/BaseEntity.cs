@@ -4,8 +4,10 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-public class BaseEntity: MonoBehaviour
+public class BaseEntity : MonoBehaviour
 {
     public string id;
+    public float x;
+    public float y;
 }
 

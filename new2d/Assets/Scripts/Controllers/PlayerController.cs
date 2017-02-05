@@ -4,12 +4,13 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-public class PlayerController : BaseEntity
+public class PlayerController : MonoBehaviour
 {
     private int _lastMoveX = 0;
     private int _lastMoveY = 0;
     private Rigidbody2D _body;
-    private BaseEntity _baseEntity;
+
+    public PlayerStats stats;
 
     private static bool _alreadyExists = false;
 
@@ -25,7 +26,7 @@ public class PlayerController : BaseEntity
             DontDestroyOnLoad(this.gameObject);
 
             _body = GetComponent<Rigidbody2D>();
-            _baseEntity = GetComponent<BaseEntity>();
+            stats = GetComponent<PlayerStats>();
         }
     }
 
@@ -47,11 +48,17 @@ public class PlayerController : BaseEntity
             if (moveX == 0 && moveY == 0)
             {
                 //send end move with id, transform.positiion.x and transform.position.y
-                NetworkController.SendEndMovementMessage(_baseEntity.id, _body.transform.position.x, _body.transform.position.y);
+                float posX = _body.transform.position.x;
+                float posY = _body.transform.position.y;
+
+                stats.x = posX;
+                stats.y = posY;
+
+                NetworkController.SendEndMovementMessage(stats.id, posX, posY);
             } else
             {
                 //send init move with id, moveX and moveY
-                NetworkController.SendMovementMessage(_baseEntity.id, moveX, moveY);
+                NetworkController.SendMovementMessage(stats.id, moveX, moveY);
             }
         }
     }

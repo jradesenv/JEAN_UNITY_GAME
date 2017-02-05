@@ -8,7 +8,7 @@ public class MovementController : MonoBehaviour {
     private Rigidbody2D objectToMove;
     private BaseEntity baseEntity; 
     private Vector2 velocity;
-    private float speed = 1;
+    private float speed = 6;
     //private bool isMovingLeft = false;
     //private bool isMovingRight = false;
     //private bool isMovingUp = false;

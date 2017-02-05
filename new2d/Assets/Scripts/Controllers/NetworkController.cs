@@ -16,11 +16,159 @@ public class NetworkController : MonoBehaviour, INetEventListener
     private static readonly char _messageTypeSeparator = '#';
     private static readonly char _messageValuesSeparator = '!';
     private static readonly string _connectionKey = "testejean";
+
     private static readonly int _messageMaxLength = 200;
 
     public static bool isConnected = false;
+    public static NetworkController sharedInstance;
 
-    //Movement
+    #region Connect to Server
+
+    public void ConnectToServer()
+    {
+        _netClient = new NetClient(this, _connectionKey);
+        _netClient.Start();
+        _netClient.Connect(_host, _port);
+        _netClient.UpdateTime = 15;
+    }
+
+    public delegate void OnConnectionToServerFailEvent(string message);
+    public static event OnConnectionToServerFailEvent _onConnectionToServerFailHandler = delegate { };
+    public static void ListenToConnectionToServerFail(OnConnectionToServerFailEvent onConnectionToServerFailHandler)
+    {
+        NetworkController._onConnectionToServerFailHandler += onConnectionToServerFailHandler;
+    }
+
+    public static void UnlistenToConnectionToServerFail(OnConnectionToServerFailEvent onConnectionToServerFailHandler)
+    {
+        NetworkController._onConnectionToServerFailHandler -= onConnectionToServerFailHandler;
+    }
+
+    public delegate void OnConnectToServerEvent();
+    public static event OnConnectToServerEvent _onConnectToServerHandler = delegate { };
+    public static void ListenToConnectToServer(OnConnectToServerEvent onConnectedToServerHandler)
+    {
+        NetworkController._onConnectToServerHandler += onConnectedToServerHandler;
+    }
+
+    public static void UnlistenToConnectToServer(OnConnectToServerEvent onConnectedToServerHandler)
+    {
+        NetworkController._onConnectToServerHandler -= onConnectedToServerHandler;
+    }
+
+    #endregion
+
+    #region Login
+
+    public delegate void OnLoginFailEvent(string message);
+    public delegate void OnLoginSuccessEvent(string id, string name, float posX, float posY, DateTime lastLogin);
+
+    private class OnLoginHandler
+    {
+        public OnLoginFailEvent fail;
+        public OnLoginSuccessEvent success;
+
+        public OnLoginHandler(OnLoginFailEvent failHandler, OnLoginSuccessEvent successHandler)
+        {
+            this.fail = failHandler;
+            this.success = successHandler;
+        }
+    }
+
+    private static OnLoginHandler _onLoginHandlers = null;
+    public static void ListenLoginEvent(OnLoginFailEvent failHandler, OnLoginSuccessEvent successHandler)
+    {
+        NetworkController._onLoginHandlers = new OnLoginHandler(failHandler, successHandler);
+    }
+
+    public static void UnlistenLoginEvent()
+    {
+        NetworkController._onLoginHandlers = null;
+    }
+
+    private static void OnLoginFail(string[] arrValues)
+    {
+        string message = arrValues[0];
+
+        Debug.Log("Recebeu mensagem de falha de login: " + message);
+
+        if (NetworkController._onLoginHandlers != null)
+        {
+            NetworkController._onLoginHandlers.fail(message);
+        }
+        else
+        {
+            Debug.Log("Handler de login não registrado!");
+        }
+    }
+
+    private static void OnLoginSuccess(string[] arrValues)
+    {
+        string id = arrValues[0];
+        string name = arrValues[1];
+        float posX = Converters.StringToFloat(arrValues[2]);
+        float posY = Converters.StringToFloat(arrValues[3]);
+        DateTime lastLogin = Converters.StringToDateTime(arrValues[4]);
+
+        Debug.Log("Recebeu mensagem de sucesso de login de: " + id + " - " + name);
+
+        if (NetworkController._onLoginHandlers != null)
+        {
+            NetworkController._onLoginHandlers.success(id, name, posX, posY, lastLogin);
+        }
+        else
+        {
+            Debug.Log("Handler de login não registrado!");
+        }
+    }
+
+    public static void SendLoginMessage(string username, string password)
+    {
+        string message = FormatMessageContent(ToServerMessageType.LOGIN, username, password);
+        NetworkController.SendMessage(message);
+
+        Debug.Log("Enviou mensagem de login: " + username + " | " + password);
+    }
+
+    #endregion
+
+    #region User Connected
+
+    public delegate void OnUserConnectedEvent(string id, string name, float posX, float posY);
+    private static OnUserConnectedEvent _onUserConnectedHandler = null;
+    public static void ListenUserConnectedEvent(OnUserConnectedEvent onUserConnectedHandler)
+    {
+        NetworkController._onUserConnectedHandler = onUserConnectedHandler;
+    }
+
+    public static void UnlistenUserConnectedEvent()
+    {
+        NetworkController._onUserConnectedHandler = null;
+    }
+
+    private static void OnUserConnected(string[] arrValues)
+    {
+        string id = arrValues[0];
+        string name = arrValues[1];
+        float posX = Converters.StringToFloat(arrValues[2]);
+        float posY = Converters.StringToFloat(arrValues[3]);
+
+        Debug.Log("Recebeu mensagem de usuario conectado de: " + id + " - " + name);
+
+        if (NetworkController._onUserConnectedHandler != null)
+        {
+            NetworkController._onUserConnectedHandler(id, name, posX, posY);
+        }
+        else
+        {
+            Debug.Log("Handler de usuario conectado não registrado!");
+        }
+    }
+
+    #endregion
+
+    #region Movement
+
     public delegate void OnMovementReceiveEvent(int moveX, int moveY);
     public delegate void OnEndMovementReceiveEvent(float posX, float posY);
     private class OnMovementHandler
@@ -59,6 +207,10 @@ public class NetworkController : MonoBehaviour, INetEventListener
         {
             handler.init(moveX, moveY);
         }
+        else
+        {
+            Debug.Log("Handler de inicio de movimento não existente para id: " + id);
+        }
     }
 
     private static void OnEndMovementReceive(string[] arrValues)
@@ -73,6 +225,10 @@ public class NetworkController : MonoBehaviour, INetEventListener
         if (_dicOnMoveHandlers.TryGetValue(id, out handler))
         {
             handler.end(posX, posY);
+        }
+        else
+        {
+            Debug.Log("Handler de fim de movimento não existente para id: " + id);
         }
     }
 
@@ -103,9 +259,9 @@ public class NetworkController : MonoBehaviour, INetEventListener
 
         string[] values = new[] { id, sActualX, sActualY };
         OnEndMovementReceive(values); //send locally
-
     }
-    //end Movement
+
+    #endregion
 
     void Start()
     {
@@ -116,17 +272,10 @@ public class NetworkController : MonoBehaviour, INetEventListener
         else
         {
             _alreadyExists = true;
+            NetworkController.sharedInstance = this;
             DontDestroyOnLoad(this.gameObject);
-            StartCoroutine("ConnectToServer");
+            //StartCoroutine("ConnectToServer");
         }
-    }
-
-    void ConnectToServer()
-    {
-        _netClient = new NetClient(this, _connectionKey);
-        _netClient.Start();
-        _netClient.Connect(_host, _port);
-        _netClient.UpdateTime = 15;
     }
 
     void Update()
@@ -139,7 +288,7 @@ public class NetworkController : MonoBehaviour, INetEventListener
 
     void OnDestroy()
     {
-        if (NetworkController._netClient != null)
+        if (this == NetworkController.sharedInstance && NetworkController._netClient != null)
         {
             NetworkController._netClient.Stop();
         }
@@ -160,6 +309,18 @@ public class NetworkController : MonoBehaviour, INetEventListener
         {
             NetworkController.OnEndMovementReceive(arrValues);
         }
+        else if (messageType == FromServerMessageType.USER_CONNECTED.ToString("D"))
+        {
+            NetworkController.OnUserConnected(arrValues);
+        }
+        else if (messageType == FromServerMessageType.LOGIN_SUCCESS.ToString("D"))
+        {
+            NetworkController.OnLoginSuccess(arrValues);
+        }
+        else if (messageType == FromServerMessageType.LOGIN_FAIL.ToString("D"))
+        {
+            NetworkController.OnLoginFail(arrValues);
+        }
         else
         {
             Debug.Log("[WARNING] Received a message with unknown type: " + completeMessage);
@@ -170,13 +331,23 @@ public class NetworkController : MonoBehaviour, INetEventListener
     {
         _serverPeer = peer;
         NetworkController.isConnected = true;
+        if (_onConnectToServerHandler != null)
+        {
+            _onConnectToServerHandler();
+        }
 
         Debug.Log("[CLIENT] We connected to " + peer.EndPoint);
     }
 
     public void OnPeerDisconnected(NetPeer peer, DisconnectReason reason, int socketErrorCode)
     {
-        Debug.Log("[CLIENT] We disconnected because " + reason);
+        NetworkController.isConnected = false;
+        if (_onConnectionToServerFailHandler != null)
+        {
+            _onConnectionToServerFailHandler(reason.ToString());
+        }
+
+        Debug.Log("[CLIENT] We disconnected because " + reason.ToString());
     }
 
     public void OnNetworkError(NetEndPoint endPoint, int socketErrorCode)
@@ -225,13 +396,17 @@ public class NetworkController : MonoBehaviour, INetEventListener
 
     public enum FromServerMessageType
     {
-        MOVE = 0,
-        END_MOVE = 1,
+        LOGIN_SUCCESS = 0,
+        LOGIN_FAIL = 1,
+        USER_CONNECTED = 2,
+        MOVE = 3,
+        END_MOVE = 4,
     }
 
     public enum ToServerMessageType
     {
-        MOVE = 0,
-        END_MOVE = 1
+        LOGIN = 0,
+        MOVE = 1,
+        END_MOVE = 2
     }
 }

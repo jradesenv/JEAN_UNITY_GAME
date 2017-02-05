@@ -42,4 +42,14 @@ class Converters
     {
         return value.ToString();
     }
+
+    public static DateTime StringToDateTime(string text)
+    {
+        return DateTime.ParseExact(text, "O", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
+    }
+
+    public static string DateTimeToString(DateTime dateTime)
+    {
+        return dateTime.ToString("O");
+    }
 }
