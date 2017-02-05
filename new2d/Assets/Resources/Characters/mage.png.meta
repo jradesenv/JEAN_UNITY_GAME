@@ -1,25 +1,21 @@
 fileFormatVersion: 2
-guid: 4fc8ae2289fbcf2459505d7d1ba69a1b
-timeCreated: 1486173901
+guid: c242bfc5f0e502d49b6cae78b649a802
+timeCreated: 1486312224
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: GamesPlusJames_RPG-Character_0
-    21300002: GamesPlusJames_RPG-Character_1
-    21300004: GamesPlusJames_RPG-Character_2
-    21300006: GamesPlusJames_RPG-Character_3
-    21300008: GamesPlusJames_RPG-Character_4
-    21300010: GamesPlusJames_RPG-Character_5
-    21300012: GamesPlusJames_RPG-Character_6
-    21300014: GamesPlusJames_RPG-Character_7
-    21300016: GamesPlusJames_RPG-Character_8
-    21300018: GamesPlusJames_RPG-Character_9
-    21300020: GamesPlusJames_RPG-Character_10
-    21300022: GamesPlusJames_RPG-Character_11
-    21300024: GamesPlusJames_RPG-Character_12
-    21300026: GamesPlusJames_RPG-Character_13
-    21300028: GamesPlusJames_RPG-Character_14
-    21300030: GamesPlusJames_RPG-Character_15
+    21300000: mage_up_0
+    21300002: mage_up_1
+    21300004: mage_up_2
+    21300006: mage_right_0
+    21300008: mage_right_1
+    21300010: mage_right_2
+    21300012: mage_down_0
+    21300014: mage_down_1
+    21300016: mage_down_2
+    21300018: mage_left_0
+    21300020: mage_left_1
+    21300022: mage_left_2
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -56,7 +52,7 @@ TextureImporter:
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spritePixelsToUnits: 16
+  spritePixelsToUnits: 100
   alphaUsage: 1
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
@@ -110,210 +106,158 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: GamesPlusJames_RPG-Character_0
+      name: mage_up_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 48
+        y: 54
         width: 16
-        height: 16
+        height: 18
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: GamesPlusJames_RPG-Character_1
+      name: mage_up_1
       rect:
         serializedVersion: 2
         x: 16
-        y: 48
+        y: 54
         width: 16
-        height: 16
+        height: 18
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: GamesPlusJames_RPG-Character_2
+      name: mage_up_2
       rect:
         serializedVersion: 2
         x: 32
-        y: 48
+        y: 54
         width: 16
-        height: 16
+        height: 18
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: GamesPlusJames_RPG-Character_3
-      rect:
-        serializedVersion: 2
-        x: 48
-        y: 48
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: GamesPlusJames_RPG-Character_4
+      name: mage_right_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 32
+        y: 36
         width: 16
-        height: 16
+        height: 18
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: GamesPlusJames_RPG-Character_5
+      name: mage_right_1
       rect:
         serializedVersion: 2
         x: 16
-        y: 32
+        y: 36
         width: 16
-        height: 16
+        height: 18
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: GamesPlusJames_RPG-Character_6
+      name: mage_right_2
       rect:
         serializedVersion: 2
         x: 32
-        y: 32
+        y: 36
         width: 16
-        height: 16
+        height: 18
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: GamesPlusJames_RPG-Character_7
-      rect:
-        serializedVersion: 2
-        x: 48
-        y: 32
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: GamesPlusJames_RPG-Character_8
+      name: mage_down_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 16
+        y: 18
         width: 16
-        height: 16
+        height: 18
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: GamesPlusJames_RPG-Character_9
+      name: mage_down_1
       rect:
         serializedVersion: 2
         x: 16
-        y: 16
+        y: 18
         width: 16
-        height: 16
+        height: 18
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: GamesPlusJames_RPG-Character_10
+      name: mage_down_2
       rect:
         serializedVersion: 2
         x: 32
-        y: 16
+        y: 18
         width: 16
-        height: 16
+        height: 18
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: GamesPlusJames_RPG-Character_11
-      rect:
-        serializedVersion: 2
-        x: 48
-        y: 16
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: GamesPlusJames_RPG-Character_12
+      name: mage_left_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 16
-        height: 16
+        height: 18
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: GamesPlusJames_RPG-Character_13
+      name: mage_left_1
       rect:
         serializedVersion: 2
         x: 16
         y: 0
         width: 16
-        height: 16
+        height: 18
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: GamesPlusJames_RPG-Character_14
+      name: mage_left_2
       rect:
         serializedVersion: 2
         x: 32
         y: 0
         width: 16
-        height: 16
+        height: 18
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: GamesPlusJames_RPG-Character_15
-      rect:
-        serializedVersion: 2
-        x: 48
-        y: 0
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0

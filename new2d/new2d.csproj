@@ -96,6 +96,7 @@
     <Compile Include="Assets\Scripts\Controllers\MovementController.cs" />
     <Compile Include="Assets\Scripts\Controllers\NetworkController.cs" />
     <Compile Include="Assets\Scripts\Controllers\PlayerController.cs" />
+    <Compile Include="Assets\Scripts\Controllers\SpriteController.cs" />
     <Compile Include="Assets\Scripts\Entity\BaseEntity.cs" />
     <Compile Include="Assets\Scripts\Entity\PlayerStats.cs" />
     <Compile Include="Assets\Scripts\Entity\PlayerStatsDTO.cs" />
