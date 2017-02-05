@@ -38,7 +38,7 @@ public class LoginController : MonoBehaviour
         NetworkController.ListenToConnectToServer(OnConnectedToServerHandler);
         NetworkController.ListenToConnectionToServerFail(OnConnectionToServerFailHandler);
 
-        Connect();
+        StartCoroutine("Connect");
     }
 
     private void Connect()
@@ -47,6 +47,11 @@ public class LoginController : MonoBehaviour
         ChangeControlsActive(false);
         SetMessage("Conectando ao servidor. Por favor, aguarde.");
         NetworkController.sharedInstance.ConnectToServer();
+    }
+
+    System.Collections.IEnumerator WaitForSecondsWrapper(float secs)
+    {
+        yield return new UnityEngine.WaitForSeconds(secs);
     }
 
     private void OnDestroy()

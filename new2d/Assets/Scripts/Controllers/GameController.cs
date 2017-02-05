@@ -8,9 +8,10 @@ public class GameController : MonoBehaviour
 {
     public static PlayerStatsDTO playerStats = new PlayerStatsDTO();
     public GameObject playerObject;
+    public GameObject otherPlayerObject;
 
     private static bool _alreadyExists = false;
-
+    public static GameController sharedInstance;
     private void Start()
     {
         if(_alreadyExists)
@@ -19,21 +20,47 @@ public class GameController : MonoBehaviour
         } else
         {
             GameController._alreadyExists = true;
+            sharedInstance = this;
             DontDestroyOnLoad(this.gameObject);
-            StartCoroutine("SpawnPlayer");
+
+            NetworkController.ListenUserConnectedEvent(onUserConnectedHandler);
+
+            NetworkController.SendGetOtherPlayersMessage(GameController.playerStats.id);
+
+            SpawnPlayer(playerObject, GameController.playerStats);
         }
     }
 
-    public void SpawnPlayer()
+    private void OnDestroy()
     {
-        playerObject = Instantiate(playerObject, transform.position, transform.rotation);
-        playerObject.transform.position = new Vector3(GameController.playerStats.x, GameController.playerStats.y, 0f);
-        playerObject.name = GameController.playerStats.id;
+        if(this == GameController.sharedInstance)
+        {
+            NetworkController.UnlistenUserConnectedEvent();
+        }
+    }
+
+    private void onUserConnectedHandler(string id, string name, float posX, float posY)
+    {
+        PlayerStatsDTO stats = new PlayerStatsDTO()
+        {
+            id = id,
+            playerName = name,
+            x = posX,
+            y = posY
+        };
+        SpawnPlayer(otherPlayerObject, stats);
+    }
+
+    public void SpawnPlayer(GameObject pObject, PlayerStatsDTO stats)
+    {
+        playerObject = Instantiate(pObject, transform.position, transform.rotation);
+        playerObject.transform.position = new Vector3(stats.x, stats.y, 0f);
+        playerObject.name = stats.id;
 
         PlayerStats playerStats = playerObject.GetComponent<PlayerStats>();
-        playerStats.id = GameController.playerStats.id;
-        playerStats.playerName = GameController.playerStats.playerName;
-        playerStats.x = GameController.playerStats.x;
-        playerStats.y = GameController.playerStats.y;
+        playerStats.id = stats.id;
+        playerStats.playerName = stats.playerName;
+        playerStats.x = stats.x;
+        playerStats.y = stats.y;
     }
 }

@@ -11,7 +11,7 @@ public class NetworkController : MonoBehaviour, INetEventListener
     private static NetPeer _serverPeer;
     private static bool _alreadyExists = false;
 
-    private static readonly string _host = "localhost";
+    private static readonly string _host = "192.168.1.110";
     private static readonly int _port = 9050;
     private static readonly char _messageTypeSeparator = '#';
     private static readonly char _messageValuesSeparator = '!';
@@ -186,7 +186,15 @@ public class NetworkController : MonoBehaviour, INetEventListener
     private static Dictionary<String, OnMovementHandler> _dicOnMoveHandlers = new Dictionary<string, OnMovementHandler>();
     public static void ListenObjectMovement(string id, OnMovementReceiveEvent initHandler, OnEndMovementReceiveEvent endHandler)
     {
-        _dicOnMoveHandlers.Add(id, new OnMovementHandler(initHandler, endHandler));
+        OnMovementHandler handler = new OnMovementHandler(initHandler, endHandler);
+        if (_dicOnMoveHandlers.ContainsKey(id))
+        {
+            _dicOnMoveHandlers[id] = handler;
+        }
+        else
+        {
+            _dicOnMoveHandlers.Add(id, handler);
+        }
     }
 
     public static void UnlistenObjectMovement(string id)
@@ -263,7 +271,17 @@ public class NetworkController : MonoBehaviour, INetEventListener
 
     #endregion
 
-    void Start()
+    #region Get Players
+
+    public static void SendGetOtherPlayersMessage(string id)
+    {
+        string message = FormatMessageContent(ToServerMessageType.GET_OTHER_PLAYERS, id);
+        SendMessage(message);
+    }
+
+    #endregion
+
+    void Awake()
     {
         if (_alreadyExists)
         {
@@ -407,6 +425,7 @@ public class NetworkController : MonoBehaviour, INetEventListener
     {
         LOGIN = 0,
         MOVE = 1,
-        END_MOVE = 2
+        END_MOVE = 2,
+        GET_OTHER_PLAYERS = 3
     }
 }
